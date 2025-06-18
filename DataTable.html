@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Management</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <h2>Users List</h2>
+    <table id="userTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            $('#userTable').DataTable({
+                serverSide: true,
+                ajax: {
+                    url: '<?= base_url('user/get_users') ?>',
+                    type: 'POST'
+                },
+                columns: [
+                    { data: 'id' },
+                    { data: 'name' },
+                    { data: 'email' },
+                    { data: 'status' },
+                    { data: 'action', orderable: false, searchable: false }
+                ],
+                order: [[1, 'asc']]
+            });
+        });
+    </script>
+</body>
+</html>
