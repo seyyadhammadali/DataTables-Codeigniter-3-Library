@@ -1,3 +1,9 @@
+<h1>CodeIgniter DataTables</h1>
+<p>DataTables server-side for CodeIgniter, supported for both CodeIgniter 3 and CodeIgniter 4.</p>
+<p>
+Note: This library only handle the server-side part, you will still need to set up the client-side components, such as jQuery, the DataTables library, and the necessary styles. Don't worry, we've included examples below to help you get started.</p>
+<h3>Requirements</h3>
+<p>No additional requirements are needed if you are already using CodeIgniter. Simply integrate this library into your existing project.</p>
 <h3 dir="auto">
     Full Usage Example
 </h3>
