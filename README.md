@@ -55,7 +55,7 @@ class User extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this->load->library('datalib');
+        $this->load->library('datatable');
     }
 
     public function index()
@@ -65,7 +65,7 @@ class User extends CI_Controller {
 
     public function get_users()
     {
-        $output = $this->datalib
+        $output = $this->datatable
             ->from('users') // Automatically selects all columns
             ->where('status', 'active')
             ->add_column('action', '<a href="edit/$1">Edit</a>', 'id')
