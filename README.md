@@ -22,68 +22,75 @@ Note: This library only handle the server-side part, you will still need to set 
 </div>
 <div dir="auto">
     <div>
-        <pre><code class="language-plaintext">&lt;?php defined('BASEPATH') OR exit('No direct script access allowed');
+      <pre><code>
+          <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class User extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this-&gt;load-&gt;library('datalib');
+        $this->load->library('datalib');
     }
 
     public function index()
     {
-        $this-&gt;load-&gt;view('user_view');
+        $this->load->view('user_view');
     }
 
     public function get_users()
     {
-        // Example 1: Automatic column selection with join and custom column         $output = $this-&gt;datalib
-            -&gt;from('users')
-            -&gt;join('roles', 'roles.id = users.role_id', 'left')
-            -&gt;where('users.status', 'active')
-            -&gt;add_column('action', '&lt;a href="edit/$1"&gt;Edit&lt;/a&gt;', 'id')
-            -&gt;edit_column('name', '&lt;strong&gt;$1&lt;/strong&gt;', 'name')
-            -&gt;unset_column('role_id')
-            -&gt;generate('UTF-8', 'keybased');
+        // Example 1: Automatic column selection with join and custom column
+        $output = $this->datalib
+            ->from('users')
+            ->join('roles', 'roles.id = users.role_id', 'left')
+            ->where('users.status', 'active')
+            ->add_column('action', '<a href="edit/$1">Edit</a>', 'id')
+            ->edit_column('name', '<strong>$1</strong>', 'name')
+            ->unset_column('role_id')
+            ->generate('UTF-8', 'keybased');
 
-        $this-&gt;output
-            -&gt;set_content_type('application/json')
-            -&gt;set_output($output);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output($output);
     }
 
     public function get_users_explicit()
     {
-        // Example 2: Explicit column selection with static filter         $output = $this-&gt;datalib
-            -&gt;select('users.id, users.name as username, users.email, roles.role_name')
-            -&gt;from('users')
-            -&gt;join('roles', 'roles.id = users.role_id', 'left')
-            -&gt;filter('users.status', 'active')
-            -&gt;add_column('profile', '&lt;a href="profile/$1"&gt;View&lt;/a&gt;', 'id')
-            -&gt;generate('UTF-8', 'indexed');
+        // Example 2: Explicit column selection with static filter
+        $output = $this->datalib
+            ->select('users.id, users.name as username, users.email, roles.role_name')
+            ->from('users')
+            ->join('roles', 'roles.id = users.role_id', 'left')
+            ->filter('users.status', 'active')
+            ->add_column('profile', '<a href="profile/$1">View</a>', 'id')
+            ->generate('UTF-8', 'indexed');
 
-        $this-&gt;output
-            -&gt;set_content_type('application/json')
-            -&gt;set_output($output);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output($output);
     }
 
     public function get_custom_data()
     {
-        // Example 3: Using getproduction with custom data         $rows = [
-            ['id' =&gt; 1, 'name' =&gt; 'John Doe', 'email' =&gt; 'john@example.com'],
-            ['id' =&gt; 2, 'name' =&gt; 'Jane Smith', 'email' =&gt; 'jane@example.com']
+        // Example 3: Using getproduction with custom data
+        $rows = [
+            ['id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com'],
+            ['id' => 2, 'name' => 'Jane Smith', 'email' => 'jane@example.com']
         ];
         $count = count($rows);
 
-        $this-&gt;datalib-&gt;from('users'); // Set columns for exec_replace         $output = $this-&gt;datalib
-            -&gt;add_column('action', '&lt;button onclick="delete($1)"&gt;Delete&lt;/button&gt;', 'id')
-            -&gt;getproduction($rows, $count, 'UTF-8', 'keybased');
+        $this->datalib->from('users'); // Set columns for exec_replace
+        $output = $this->datalib
+            ->add_column('action', '<button onclick="delete($1)">Delete</button>', 'id')
+            ->getproduction($rows, $count, 'UTF-8', 'keybased');
 
-        $this-&gt;output
-            -&gt;set_content_type('application/json')
-            -&gt;set_output($output);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output($output);
     }
-}</code></pre>
+}
+      </code></pre>
         <div>
             &nbsp;
         </div>
