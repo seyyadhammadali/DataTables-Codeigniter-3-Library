@@ -24,7 +24,7 @@ A CodeIgniter 3 library designed for seamless server-side processing with [DataT
 
 1. **Download the Library**:
    - Clone or download this repository.
-   - Copy `Datalib.php` to `application/libraries/` in your CodeIgniter project.
+   - Copy `Library/Datatable.php` to `application/libraries/` in your CodeIgniter project.
 
 2. **Configure CodeIgniter**:
    - Ensure the database library is autoloaded in `application/config/autoload.php`:
