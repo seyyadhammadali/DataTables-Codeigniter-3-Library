@@ -1,6 +1,6 @@
 # DataTable for CodeIgniter 3
 
-A CodeIgniter 3 library designed for seamless server-side processing with [DataTables]([https://datatables.net/](https://datatables.net/manual/server-side)). It provides a fluent, chainable interface for building database queries, supporting automatic column selection, joins, filtering, ordering, pagination, and custom column manipulation. The library is optimized for both indexed (numeric arrays) and key-based (associative arrays) JSON output, making it ideal for AJAX-driven DataTables applications.
+A CodeIgniter 3 library designed for seamless server-side processing with [DataTables](https://datatables.net/manual/server-side). It provides a fluent, chainable interface for building database queries, supporting automatic column selection, joins, filtering, ordering, pagination, and custom column manipulation. The library is optimized for both indexed (numeric arrays) and key-based (associative arrays) JSON output, making it ideal for AJAX-driven DataTables applications.
 
 ## Features
 
