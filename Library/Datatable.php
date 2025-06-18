@@ -1,5 +1,17 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
-
+ /**
+  * Ignited Datatables
+  *
+  * This is a wrapper class/library based on the native Datatables server-side implementation by Allan Jardine
+  * found at http://datatables.net/examples/data_sources/server_side.html for CodeIgniter
+  *
+  * @package    CodeIgniter
+  * @subpackage libraries
+  * @category   library
+  * @version    0.7
+  * @author     Hammad Ali <hali35275@gmail.com>
+  * @link       https://github.com/seyyadhammadali/DataTables-Codeigniter-3-Library
+  */
 #[AllowDynamicProperties]
 class Datatable
 {
