@@ -22,7 +22,7 @@ Note: This library only handle the server-side part, you will still need to set 
 </div>
 <div dir="auto">
     <div>
-      <pre><code>
+      <pre>
           <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -90,7 +90,7 @@ class User extends CI_Controller {
             ->set_output($output);
     }
 }
-      </code></pre>
+     </pre>
         <div>
             &nbsp;
         </div>
