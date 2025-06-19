@@ -422,6 +422,7 @@ class Datatable
             }
 
             foreach ($this->edit_columns as $modkey => $modval) {
+                
                 foreach ($modval as $val) {
                     $index = array_search($modkey, $this->columns);
                     $aaData[$row_key][($output_mode === 'keybased') ? $modkey : $index] = $this->exec_replace($val, $aaData[$row_key]);
@@ -479,38 +480,8 @@ class Datatable
      */
     protected function exec_replace($custom_val, $row_data)
     {
-        $content = $custom_val['content'];
-        $execute_php = isset($custom_val['execute_php']) && $custom_val['execute_php'] === TRUE;
-
-        // Handle ternary expressions if execute_php is true
-        if (
-            $execute_php &&
-            preg_match('/^\$1\s*(==|===|!=|!==)\s*(\S+)\s*\?\s*"([^"]*)"\s*:\s*"([^"]*)"$/', $content, $matches) &&
-            isset($custom_val['replacement'][0]) && in_array($custom_val['replacement'][0], $this->columns)
-        ) {
-            $operator = $matches[1];
-            $compare_value = $matches[2];
-            $true_value = $matches[3];
-            $false_value = $matches[4];
-            $value = $row_data[array_search($custom_val['replacement'][0], $this->columns)];
-
-            // Evaluate the comparison
-            switch ($operator) {
-                case '==':
-                    return $value == $compare_value ? $true_value : $false_value;
-                case '===':
-                    return $value === $compare_value ? $true_value : $false_value;
-                case '!=':
-                    return $value != $compare_value ? $true_value : $false_value;
-                case '!==':
-                    return $value !== $compare_value ? $true_value : $false_value;
-                default:
-                    return $content; // Fallback if operator is unrecognized
-            }
-        }
-
-        // Standard string replacement logic
         $replace_string = '';
+
         if (isset($custom_val['replacement']) && is_array($custom_val['replacement'])) {
             foreach ($custom_val['replacement'] as $key => $val) {
                 $sval = preg_replace("/(?<!\w)([\'\"])(.*)\\1(?!\w)/i", '$2', trim($val));
@@ -531,10 +502,14 @@ class Datatable
                     $replace_string = $sval;
                 }
 
-                $content = str_ireplace('$' . ($key + 1), $replace_string, $content);
+                $custom_val['content'] = str_ireplace('$' . ($key + 1), $replace_string, $custom_val['content']);
             }
         }
-
+        $content = $custom_val['content'];
+        if(isset($custom_val['execute_php']) && !empty($custom_val['execute_php'])){
+            $content = "return ".$content.";";
+            return eval($content);
+        }
         return $content;
     }
 
@@ -657,6 +632,8 @@ class Datatable
             }
 
             foreach ($this->edit_columns as $modkey => $modval) {
+                print_r($modval);
+                die();
                 foreach ($modval as $val) {
                     $index = array_search($modkey, $this->columns);
                     $aaData[$row_key][($output_mode === 'keybased') ? $modkey : $index] = $this->exec_replace($val, $aaData[$row_key]);
