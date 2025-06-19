@@ -171,82 +171,13 @@ class User extends CI_Controller {
 <h2 dir="auto">
     Debugging
 </h2>
+
 <ol dir="auto">
-    <li>
+     <li>
         <p>
             <strong>Log SQL Queries</strong>:
         </p>
-        <div dir="auto">
-            <div>
-                <div>
-                    <span>php</span>
-                </div>
-                <div>
-                    <div>
-                        <div style="opacity:1;">
-                            <button type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 20 5-5 5 5"></path><path d="m7 4 5 5 5-5"></path></svg><span>Collapse</span></button><button type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"></line><path d="M3 12h15a3 3 0 1 1 0 6h-4"></path><polyline points="16 16 14 18 16 20"></polyline><line x1="3" x2="10" y1="18" y2="18"></line></svg><span>Wrap</span></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </li>
-</ol>
-<p>
-    <button type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><span>Copy</span></button>
-</p>
-<ol dir="auto">
-    <li>
-        <div dir="auto">
-            <div>
-                <div style="border-image-outset:;border-image-repeat:;border-image-slice:;border-image-source:;border-image-width:;border-radius:0px 0px 12px 12px;border-top-style:none;color:var(--fg-primary);display:block;font-family:var(--font-ibm-plex-mono);font-size:0.9em;line-height:1.5em;margin-top:0px;overflow-x:auto;padding:16px;">
-                    <code style="font-size:inherit;line-height:inherit;white-space:pre;"><span>log_message(</span></code><span style="color:rgb(80,161,79);"><code style="font-size:inherit;line-height:inherit;white-space:pre;">'debug'</code></span><code style="font-size:inherit;line-height:inherit;white-space:pre;"><span>, </span></code><span style="color:rgb(166,38,164);"><code style="font-size:inherit;line-height:inherit;white-space:pre;">$this</code></span><code style="font-size:inherit;line-height:inherit;white-space:pre;"><span>-&gt;ci-&gt;db-&gt;last_query());</span></code>
-                </div>
-                <div>
-                    &nbsp;
-                </div>
-                <div>
-                    &nbsp;
-                </div>
-            </div>
-        </div>
-        <p>
-            Enable logging in <span>application/config/config.php</span>:
-        </p>
-        <div dir="auto">
-            <div>
-                <div>
-                    <span>php</span>
-                </div>
-                <div>
-                    <div>
-                        <div style="opacity:1;">
-                            <button type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 20 5-5 5 5"></path><path d="m7 4 5 5 5-5"></path></svg><span>Collapse</span></button><button type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"></line><path d="M3 12h15a3 3 0 1 1 0 6h-4"></path><polyline points="16 16 14 18 16 20"></polyline><line x1="3" x2="10" y1="18" y2="18"></line></svg><span>Wrap</span></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </li>
-</ol>
-<p>
-    <button type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><span>Copy</span></button>
-</p>
-<ol dir="auto">
-    <li>
-        <div dir="auto">
-            <div>
-                <div style="border-image-outset:;border-image-repeat:;border-image-slice:;border-image-source:;border-image-width:;border-radius:0px 0px 12px 12px;border-top-style:none;color:var(--fg-primary);display:block;font-family:var(--font-ibm-plex-mono);font-size:0.9em;line-height:1.5em;margin-top:0px;overflow-x:auto;padding:16px;">
-                    <span style="color:rgb(152,104,1);"><code style="font-size:inherit;line-height:inherit;white-space:pre;">$config</code></span><code style="font-size:inherit;line-height:inherit;white-space:pre;"><span>[</span></code><span style="color:rgb(80,161,79);"><code style="font-size:inherit;line-height:inherit;white-space:pre;">'log_threshold'</code></span><code style="font-size:inherit;line-height:inherit;white-space:pre;"><span>] = </span></code><span style="color:rgb(152,104,1);"><code style="font-size:inherit;line-height:inherit;white-space:pre;">4</code></span><code style="font-size:inherit;line-height:inherit;white-space:pre;"><span>;</span></code>
-                </div>
-                <div>
-                    &nbsp;
-                </div>
-                <div>
-                    &nbsp;
-                </div>
-            </div>
-        </div>
+          <code>log_message('debug', $this->ci->db->last_query());</code>
     </li>
     <li>
         <strong>Inspect AJAX Requests</strong>: Use the browser's Network tab to verify DataTables parameters (e.g., <span>order[0][column]=1&amp;order[0][dir]=asc</span>).
