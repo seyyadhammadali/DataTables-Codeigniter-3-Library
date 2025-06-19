@@ -89,45 +89,26 @@ A CodeIgniter 3 library designed for seamless server-side processing with [DataT
 1.**Log SQL Queries:**
 ```php
    log_message('debug', $this->ci->db->last_query());
-
+```
 2.**Inspect AJAX Requests:** Use the browser's Network tab to verify DataTables parameters (e.g., order[0][column]=1&amp;order[0][dir]=asc).
-    </li>
-    <li>
-        <strong>Check Column Mapping</strong>: Ensure <span>columns[i][data]</span> matches <span>$this-&gt;columns</span> or aliases in <span>select</span>.
-    </li>
-</ol>
-<h2 dir="auto">
-    Notes
-</h2>
-<ul dir="auto">
-    <li>
-        <strong>Regex Support</strong>: <span>REGEXP</span> is MySQL/PostgreSQL-specific. For SQL Server, use <span>PATINDEX</span>.
-    </li>
-    <li>
-        <strong>Performance</strong>: Index columns used in <span>WHERE</span>, <span>JOIN</span>, or <span>ORDER BY</span>. Cache <span>list_fields</span> for large schemas.
-    </li>
-    <li>
-        <strong>Security</strong>: Uses CodeIgniter's Query Builder for SQL injection prevention. Validate regex inputs.
-    </li>
-    <li>
-        <strong>Ordering Fix</strong>: The <span>get_ordering</span> method excludes integer-like <span>data</span> values and includes robust fallbacks.
-    </li>
-</ul>
-<h2 dir="auto">
-    License
-</h2>
-<p style="white-space:pre-wrap;" dir="auto">
-    MIT License. See WTF for details.
-</p>
-<h2 dir="auto">
-    Contributing
-</h2>
-<p style="white-space:pre-wrap;" dir="auto">
-    Contributions are welcome! Please submit issues or pull requests on GitHub.
-</p>
-<h2 dir="auto">
-    Credits
-</h2>
-<p style="white-space:pre-wrap;" dir="auto">
-    Developed for CodeIgniter 3 applications requiring DataTables server-side processing. Special thanks to the CodeIgniter and DataTables communities.
-</p>
+
+3.**Check Column Mapping:** Ensure columns[i][data] matches <span>$this->columns or aliases in select.
+
+## Notes
+
+- **Regex Support**: REGEXP is MySQL/PostgreSQL-specific. For SQL Server, use PATINDEX.
+- **Performance**: Index columns used in WHERE, JOIN, or ORDER BY. Cache list_fields for large schemas.
+- **Security**: Uses CodeIgniter's Query Builder for SQL injection prevention. Validate regex inputs.
+- **Ordering Fix**: The get_ordering method excludes integer-like data values and includes robust fallbacks.
+
+## License
+
+MIT License. See WTF for details.
+
+## Contributing
+
+Contributions are welcome! Please submit issues or pull requests on GitHub.
+
+## Credits
+
+Developed for CodeIgniter 3 applications requiring DataTables server-side processing. Special thanks to the CodeIgniter and DataTables communities.
