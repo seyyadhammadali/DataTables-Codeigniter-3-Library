@@ -1,5 +1,5 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
- /**
+/**
   * Ignited Datatables
   *
   * This is a wrapper class/library based on the native Datatables server-side implementation by Allan Jardine
@@ -12,9 +12,9 @@
   * @author     Hammad Ali <hali35275@gmail.com>
   * @link       https://github.com/seyyadhammadali/DataTables-Codeigniter-3-Library
   */
-#[AllowDynamicProperties]
 class Datatable
 {
+  
     /**
      * Global container variables for chained argument results
      */
@@ -25,6 +25,7 @@ class Datatable
     protected $select = array();
     protected $joins = array();
     protected $columns = array();
+    protected $column_aliases = array();
     protected $where = array();
     protected $filter = array();
     protected $add_columns = array();
@@ -51,12 +52,14 @@ class Datatable
     /**
      * Generates the SELECT portion of the query
      * If no columns are specified, retrieves all columns from the table
+     * Rejects aliases containing brackets, parentheses, or 'use'
      */
     public function select($columns = '', $backtick_protect = FALSE)
     {
         // Clear existing select to allow override
         $this->select = array();
         $this->columns = array();
+        $this->column_aliases = array();
 
         if (empty($columns) && !empty($this->table)) {
             $columns = implode(',', $this->ci->db->list_fields($this->table));
@@ -64,10 +67,38 @@ class Datatable
 
         if (!empty($columns)) {
             foreach ($this->explode(',', $columns) as $val) {
-                $column = trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$2', $val));
-                $this->columns[] = $column;
-                $this->select[$column] = trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$1', $val));
+                $val = trim($val);
+                // Parse alias (e.g., 'status AS user_status')
+                if (preg_match('/(.+)\s+AS\s+(\w+)/i', $val, $matches)) {
+                    // print_r($val.'=====');
+                    $original = trim($matches[1]);
+                    $alias = trim($matches[2]);
+                    // print_r($matches);
+                    // Validate alias: reject if contains [], (), or 'use'
+                    if (preg_match('/[\[\]\(\)]|\buse\b|\bcase\b/i', $original)) {
+                        log_message('debug', "Alias '$alias' rejected due to SQL keywords or invalid characters.");
+                        $this->columns[] = $alias;
+                        $this->select[$alias] = $alias;
+                        $this->column_aliases[$alias] = "";
+                    } else {
+                        $this->columns[] = $alias;
+                        $this->select[$alias] = $original;
+                        $this->column_aliases[$alias] = $original;
+                    }
+                } else {
+                   
+                    $column = trim($val);
+                    // print_r($column);
+                    if (!preg_match('/[\[\]\(\)]|\buse\b|\bcase\b/i', $column)) {
+                        $this->columns[] = $column;
+                        $this->select[$column] = $column;
+                        $this->column_aliases[$column] = $column;
+                    }
+                }
+               
             }
+            
+            // die();
             $this->ci->db->select($columns, $backtick_protect);
         }
 
@@ -117,9 +148,10 @@ class Datatable
         if (empty($this->select)) {
             $columns = implode(',', $this->ci->db->list_fields($table));
             foreach ($this->explode(',', $columns) as $val) {
-                $column = trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$2', $val));
+                $column = trim($val);
                 $this->columns[] = $column;
-                $this->select[$column] = trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$1', $val));
+                $this->select[$column] = $column;
+                $this->column_aliases[$column] = $column;
             }
             $this->ci->db->select($columns, FALSE);
         }
@@ -187,10 +219,18 @@ class Datatable
 
     /**
      * Sets additional column variables for editing columns
+     * @param string $column Column name to edit
+     * @param string $content Content or PHP expression
+     * @param string $match_replacement Columns for placeholder replacement
+     * @param bool $execute_php Whether to evaluate content as PHP expression
      */
-    public function edit_column($column, $content, $match_replacement)
+    public function edit_column($column, $content, $match_replacement, $execute_php = FALSE)
     {
-        $this->edit_columns[$column][] = array('content' => $content, 'replacement' => $this->explode(',', $match_replacement));
+        $this->edit_columns[$column][] = array(
+            'content' => $content,
+            'replacement' => $this->explode(',', $match_replacement),
+            'execute_php' => $execute_php
+        );
         return $this;
     }
 
@@ -260,7 +300,9 @@ class Datatable
                     $columns_post[$colIdx]['orderable'] === 'true' &&
                     in_array($mColArray[$colIdx], $columns)
                 ) {
-                    $this->ci->db->order_by($mColArray[$colIdx], $dir);
+                    // Use original column name for ordering
+                    $column_name = isset($this->column_aliases[$mColArray[$colIdx]]) ? $this->column_aliases[$mColArray[$colIdx]] : $mColArray[$colIdx];
+                    $this->ci->db->order_by($column_name, $dir);
                 }
             }
         }
@@ -298,11 +340,15 @@ class Datatable
                     $columns_post[$i]['searchable'] === 'true' &&
                     in_array($colName, $columns)
                 ) {
-                    $key = array_search($colName, $columns);
+                    // Use original column name for filtering
+                    $column_name = isset($this->column_aliases[$colName]) ? $this->column_aliases[$colName] : $colName;
+                    if(empty($column_name)){
+                        continue;
+                    }
                     if ($isRegex) {
-                        $sWhere .= $columns[$key] . " REGEXP '" . $this->ci->db->escape_str($searchValue) . "' OR ";
+                        $sWhere .= $column_name . " REGEXP '" . $this->ci->db->escape_str($searchValue) . "' OR ";
                     } else {
-                        $sWhere .= $columns[$key] . " LIKE '%" . $this->ci->db->escape_like_str($searchValue) . "%' OR ";
+                        $sWhere .= $column_name . " LIKE '%" . $this->ci->db->escape_like_str($searchValue) . "%' OR ";
                     }
                 }
             }
@@ -319,7 +365,8 @@ class Datatable
                 $columns_post[$i]['search']['value'] !== '' &&
                 in_array($colName, $columns)
             ) {
-                $key = array_search($colName, $columns);
+                // Use original column name for filtering
+                $column_name = isset($this->column_aliases[$colName]) ? $this->column_aliases[$colName] : $colName;
                 $searchStr = $columns_post[$i]['search']['value'];
                 $isColRegex = isset($columns_post[$i]['search']['regex']) && $columns_post[$i]['search']['regex'] === 'true';
                 $searchParts = explode(',', $searchStr);
@@ -327,11 +374,11 @@ class Datatable
                 foreach ($searchParts as $val) {
                     $val = trim($val);
                     if (preg_match("/(<=|>=|=|<|>)(\s*)(.+)/i", $val, $matches)) {
-                        $this->ci->db->where($columns[$key] . ' ' . $matches[1], $matches[3]);
+                        $this->ci->db->where($column_name . ' ' . $matches[1], $matches[3]);
                     } else if ($isColRegex) {
-                        $this->ci->db->where($columns[$key] . " REGEXP '" . $this->ci->db->escape_str($val) . "'");
+                        $this->ci->db->where($column_name . " REGEXP '" . $this->ci->db->escape_str($val) . "'");
                     } else {
-                        $this->ci->db->like($columns[$key], $val, 'both', TRUE);
+                        $this->ci->db->like($column_name, $val, 'both', TRUE);
                     }
                 }
             }
@@ -428,12 +475,42 @@ class Datatable
     }
 
     /**
-     * Executes replacements for custom columns
+     * Executes replacements for custom columns, with optional PHP expression evaluation
      */
     protected function exec_replace($custom_val, $row_data)
     {
-        $replace_string = '';
+        $content = $custom_val['content'];
+        $execute_php = isset($custom_val['execute_php']) && $custom_val['execute_php'] === TRUE;
 
+        // Handle ternary expressions if execute_php is true
+        if (
+            $execute_php &&
+            preg_match('/^\$1\s*(==|===|!=|!==)\s*(\S+)\s*\?\s*"([^"]*)"\s*:\s*"([^"]*)"$/', $content, $matches) &&
+            isset($custom_val['replacement'][0]) && in_array($custom_val['replacement'][0], $this->columns)
+        ) {
+            $operator = $matches[1];
+            $compare_value = $matches[2];
+            $true_value = $matches[3];
+            $false_value = $matches[4];
+            $value = $row_data[array_search($custom_val['replacement'][0], $this->columns)];
+
+            // Evaluate the comparison
+            switch ($operator) {
+                case '==':
+                    return $value == $compare_value ? $true_value : $false_value;
+                case '===':
+                    return $value === $compare_value ? $true_value : $false_value;
+                case '!=':
+                    return $value != $compare_value ? $true_value : $false_value;
+                case '!==':
+                    return $value !== $compare_value ? $true_value : $false_value;
+                default:
+                    return $content; // Fallback if operator is unrecognized
+            }
+        }
+
+        // Standard string replacement logic
+        $replace_string = '';
         if (isset($custom_val['replacement']) && is_array($custom_val['replacement'])) {
             foreach ($custom_val['replacement'] as $key => $val) {
                 $sval = preg_replace("/(?<!\w)([\'\"])(.*)\\1(?!\w)/i", '$2', trim($val));
@@ -454,11 +531,11 @@ class Datatable
                     $replace_string = $sval;
                 }
 
-                $custom_val['content'] = str_ireplace('$' . ($key + 1), $replace_string, $custom_val['content']);
+                $content = str_ireplace('$' . ($key + 1), $replace_string, $content);
             }
         }
 
-        return $custom_val['content'];
+        return $content;
     }
 
     /**
