@@ -65,9 +65,8 @@ A CodeIgniter 3 library designed for seamless server-side processing with [DataT
 
 4. **View (application/views/user_view.php)**:
    - Copy paste the view code from view file (DataTable.html) as per example:
-     ```php
 
-### Methods
+## Methods
 - set_database($db_name): Switch to a database defined in <span>config/database.php.
 - select($columns = '', $backtick_protect = FALSE): Define columns for SELECT. If empty, uses all table columns.
 - from($table): Set the table and auto-select columns if select</span> not called.
@@ -85,17 +84,13 @@ A CodeIgniter 3 library designed for seamless server-side processing with [DataT
 - generate($charset = 'UTF-8', $output_mode = 'indexed'): Build query and return JSON $output_mode has two modes (indexed / keybased).
 - getproduction($rows, $count, $charset = NULL, $output_mode = 'indexed'): Process custom data and return JSON.
 
-### Debugging
+## Debugging
 
-<ol dir="auto">
-     <li>
-        <p>
-            <strong>Log SQL Queries</strong>:
-        </p>
-          <code>log_message('debug', $this->ci->db->last_query());</code>
-    </li>
-    <li>
-        <strong>Inspect AJAX Requests</strong>: Use the browser's Network tab to verify DataTables parameters (e.g., <span>order[0][column]=1&amp;order[0][dir]=asc</span>).
+1.**Log SQL Queries:**
+```php
+   log_message('debug', $this->ci->db->last_query());
+
+2.**Inspect AJAX Requests:** Use the browser's Network tab to verify DataTables parameters (e.g., order[0][column]=1&amp;order[0][dir]=asc).
     </li>
     <li>
         <strong>Check Column Mapping</strong>: Ensure <span>columns[i][data]</span> matches <span>$this-&gt;columns</span> or aliases in <span>select</span>.
