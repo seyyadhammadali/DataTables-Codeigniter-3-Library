@@ -70,10 +70,8 @@ class Datatable
                 $val = trim($val);
                 // Parse alias (e.g., 'status AS user_status')
                 if (preg_match('/(.+)\s+AS\s+(\w+)/i', $val, $matches)) {
-                    // print_r($val.'=====');
                     $original = trim($matches[1]);
                     $alias = trim($matches[2]);
-                    // print_r($matches);
                     // Validate alias: reject if contains [], (), or 'use'
                     if (preg_match('/[\[\]\(\)]|\buse\b|\bcase\b/i', $original)) {
                         log_message('debug', "Alias '$alias' rejected due to SQL keywords or invalid characters.");
@@ -88,7 +86,6 @@ class Datatable
                 } else {
                    
                     $column = trim($val);
-                    // print_r($column);
                     if (!preg_match('/[\[\]\(\)]|\buse\b|\bcase\b/i', $column)) {
                         $this->columns[] = $column;
                         $this->select[$column] = $column;
@@ -211,9 +208,9 @@ class Datatable
     /**
      * Sets additional column variables for adding custom columns
      */
-    public function add_column($column, $content, $match_replacement = NULL)
+    public function add_column($column, $content, $match_replacement = NULL, $execute_php = NULL)
     {
-        $this->add_columns[$column] = array('content' => $content, 'replacement' => $this->explode(',', $match_replacement));
+        $this->add_columns[$column] = array('content' => $content, 'replacement' => $this->explode(',', $match_replacement), 'execute_php'=>$execute_php);
         return $this;
     }
 
@@ -632,8 +629,6 @@ class Datatable
             }
 
             foreach ($this->edit_columns as $modkey => $modval) {
-                print_r($modval);
-                die();
                 foreach ($modval as $val) {
                     $index = array_search($modkey, $this->columns);
                     $aaData[$row_key][($output_mode === 'keybased') ? $modkey : $index] = $this->exec_replace($val, $aaData[$row_key]);
