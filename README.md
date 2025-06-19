@@ -30,147 +30,62 @@ A CodeIgniter 3 library designed for seamless server-side processing with [DataT
    - Ensure the database library is autoloaded in `application/config/autoload.php`:
      ```php
      $autoload['libraries'] = array('database');
-<h3 dir="auto">
-    Full Usage Example
-</h3>
-<p style="white-space:pre-wrap;" dir="auto">
-    Below is a comprehensive example demonstrating the library's features, including automatic column selection, joins, filtering, ordering, pagination, custom columns, and both output modes. The example assumes a CodeIgniter 3 application with a MySQL database containing <span>users</span> and <span>roles</span> tables.
-</p>
-<h4 dir="auto">
-    Controller (<span>application/controllers/User.php</span>)
-</h4>
-<div dir="auto">
-    <div>
-        <div>
-            &nbsp;
-        </div>
-    </div>
-</div>
-<div dir="auto">
-    <div>
-        <pre><?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+       
+3. **Controller (application/controllers/User.php)**:
+   - Copy paste the controller code as per example:
+     ```php
+     <?php
+      defined('BASEPATH') OR exit('No direct script access allowed');
+      
+      class User extends CI_Controller {
+          public function __construct()
+          {
+              parent::__construct();
+              $this->load->library('datatable');
+          }
+      
+          public function index()
+          {
+              $this->load->view('user_view');
+          }
+      
+          public function get_users()
+          {
+              $output = $this->datatable
+                  ->from('users') // Automatically selects all columns
+                  ->where('status', 'active')
+                  ->add_column('action', '<a href="edit/$1">Edit</a>', 'id')
+                  ->generate('UTF-8', 'keybased');
+      
+              $this->output
+                  ->set_content_type('application/json')
+                  ->set_output($output);
+          }
+      }
 
-class User extends CI_Controller {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->library('datatable');
-    }
+4. **View (application/views/user_view.php)**:
+   - Copy paste the view code from view file (DataTable.html) as per example:
+     ```php
 
-    public function index()
-    {
-        $this->load->view('user_view');
-    }
+### Methods
+- set_database($db_name): Switch to a database defined in <span>config/database.php.
+- select($columns = '', $backtick_protect = FALSE): Define columns for SELECT. If empty, uses all table columns.
+- from($table): Set the table and auto-select columns if select</span> not called.
+- join($table, $fk, $type = ''): Add a JOIN clause.
+- where($key, $val = NULL, $backtick_protect = TRUE): Add a WHERE condition.
+- or_where($key, $val = NULL, $backtick_protect = TRUE): Add an OR WHERE condition.
+- like($key, $val = NULL, $backtick_protect = TRUE): Add a LIKE condition.
+- filter($key, $val = NULL, $backtick_protect = TRUE): Add a static filter.
+- group_by($column): Add a GROUP BY clause.
+- order_by($column, $sort): Add an ORDER BY clause.
+- distinct($column): Add a DISTINCT clause.
+- add_column($column, $content, $match_replacement = NULL): Add a custom column.
+- edit_column($column, $content, $match_replacement): Modify an existing column.
+- unset_column($column): Remove a column from output.
+- generate($charset = 'UTF-8', $output_mode = 'indexed'): Build query and return JSON $output_mode has two modes (indexed / keybased).
+- getproduction($rows, $count, $charset = NULL, $output_mode = 'indexed'): Process custom data and return JSON.
 
-    public function get_users()
-    {
-        $output = $this->datatable
-            ->from('users') // Automatically selects all columns
-            ->where('status', 'active')
-            ->add_column('action', '<a href="edit/$1">Edit</a>', 'id')
-            ->generate('UTF-8', 'keybased');
-
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output($output);
-    }
-}</pre>
-        <div>
-            &nbsp;
-        </div>
-    </div>
-</div>
-<h4 dir="auto">
-    View (<span>application/views/user_view.php</span>)
-</h4>
-<div dir="auto">
-    <div>
-        <div>
-            &nbsp;
-        </div>
-    </div>
-</div>
-
-<ol start="2" dir="auto">
-    <li>
-        <strong>Autoload Library (</strong><span><strong>application/config/autoload.php</strong></span><strong>)</strong>:
-    </li>
-</ol>
-<div dir="auto">
-    <div>
-        <pre>$autoload['libraries'] = array('database');</pre>
-        <div>
-            &nbsp;
-        </div>
-    </div>
-</div>
-<ol start="3" dir="auto">
-    <li>
-        <strong>Place </strong><span><strong>DataTable.php</strong></span>:
-        <ul dir="auto">
-            <li>
-                Save the updated library in <span>application/libraries/Datalib.php</span>.
-            </li>
-        </ul>
-    </li>
-</ol>
-<h2 dir="auto">
-    Methods
-</h2>
-<ul dir="auto">
-    <li>
-        <span>set_database($db_name)</span>: Switch to a database defined in <span>config/database.php</span>.
-    </li>
-    <li>
-        <span>select($columns = '', $backtick_protect = FALSE)</span>: Define columns for <span>SELECT</span>. If empty, uses all table columns.
-    </li>
-    <li>
-        <span>from($table)</span>: Set the table and auto-select columns if <span>select</span> not called.
-    </li>
-    <li>
-        <span>join($table, $fk, $type = '')</span>: Add a <span>JOIN</span> clause.
-    </li>
-    <li>
-        <span>where($key, $val = NULL, $backtick_protect = TRUE)</span>: Add a <span>WHERE</span> condition.
-    </li>
-    <li>
-        <span>or_where($key, $val = NULL, $backtick_protect = TRUE)</span>: Add an <span>OR WHERE</span> condition.
-    </li>
-    <li>
-        <span>like($key, $val = NULL, $backtick_protect = TRUE)</span>: Add a <span>LIKE</span> condition.
-    </li>
-    <li>
-        <span>filter($key, $val = NULL, $backtick_protect = TRUE)</span>: Add a static filter.
-    </li>
-    <li>
-        <span>group_by($column)</span>: Add a <span>GROUP BY</span> clause.
-    </li>
-    <li>
-        <span>order_by($column, $sort)</span>: Add an <span>ORDER BY</span> clause.
-    </li>
-    <li>
-        <span>distinct($column)</span>: Add a <span>DISTINCT</span> clause.
-    </li>
-    <li>
-        <span>add_column($column, $content, $match_replacement = NULL)</span>: Add a custom column.
-    </li>
-    <li>
-        <span>edit_column($column, $content, $match_replacement)</span>: Modify an existing column.
-    </li>
-    <li>
-        <span>unset_column($column)</span>: Remove a column from output.
-    </li>
-    <li>
-        <span>generate($charset = 'UTF-8', $output_mode = 'indexed')</span>: Build query and return JSON.
-    </li>
-    <li>
-        <span>getproduction($rows, $count, $charset = NULL, $output_mode = 'indexed')</span>: Process custom data and return JSON.
-    </li>
-</ul>
-<h2 dir="auto">
-    Debugging
-</h2>
+### Debugging
 
 <ol dir="auto">
      <li>
